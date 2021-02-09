@@ -5,12 +5,11 @@ import pandas as pd
 import datetime as dt
 from webdriver_manager.chrome import ChromeDriverManager
 
-executable_path = {'executable_path': ChromeDriverManager().install()}
-browser = Browser('chrome', **executable_path, headless=True)
 
 def scrape_all():
-   # Initiate headless driver for deployment
-    browser = Browser('chrome', **executable_path, headless=True)
+    # Initiate headless driver for deployment
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
     
     news_title, news_paragraph = mars_news(browser)
 
@@ -93,7 +92,7 @@ def mars_facts():
         return None
 
     # Assign columns and set index of DataFrame
-    df.columns=['description', 'Mars']
+    df.columns=['Description', 'Mars']
     df.set_index('Description', inplace=True)
     
     # Convert dataframe into HTML
