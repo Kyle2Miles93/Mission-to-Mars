@@ -11,6 +11,7 @@ def scrape_all():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=False)
     
+
     news_title, news_paragraph = mars_news(browser)
 
     # Run all scraping functions and store results in dictionary
@@ -19,7 +20,8 @@ def scrape_all():
       "news_paragraph": news_paragraph,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
-      "last_modified": dt.datetime.now()
+      "last_modified": dt.datetime.now(),
+      "hemispheres": mars_hemispheres(browser)
     }
 
      # Stop webdriver and return data
@@ -58,30 +60,15 @@ def mars_news(browser):
 def featured_image(browser):
         
     # Visit URL
-    url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
-    browser.visit(url)
-
-    # Find and click the full image button
-    full_image_elem = browser.find_by_tag('button')[1]
-    full_image_elem.click()
-
-
-    # parse the resulting html with soup
-    html = browser.html
-    img_soup = soup(html, 'html.parser')
-
     try:
-        # find the relative image url
-        img_url_rel = img_soup.find('img', class_='fancybox-image').get('src')
-        
-    except AttributeError:
-        return None
-
-
-    # Use the base url to create an absolute url
-    img_url = f'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/{img_url_rel}'
-    
-    return img_url
+        PREFIX = "https://web.archive.org/web/20181114023740"
+        url = f'{PREFIX}/https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
+        browser.visit(url)
+        article = browser.find_by_tag('article').first['style']
+        article_background = article.split("_/")[1].replace('");',"")
+        return f'{PREFIX}_if/{article_background}'
+    except:
+        return 'https://www.nasa.gov/sites/default/files/styles/full_width_feature/public/thumbnails/image/pia22486-main.jpg'
 
 def mars_facts():
 
@@ -98,6 +85,36 @@ def mars_facts():
     # Convert dataframe into HTML
     return df.to_html(classes="table table-striped")
     
+def mars_hemispheres(browser):
+
+        # 1. Use browser to visit the URL 
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url)
+
+    # 2. Create a list to hold the images and titles.
+    hemisphere_image_urls = []
+
+    # 3. Write code to retrieve the image urls and titles for each hemisphere.
+    images = browser.find_by_css('a.product-item h3')
+
+    for i in range(len(images)):
+        hemispheres = {}
+        # find each image url with Splinter
+        browser.find_by_css('a.product-item h3')[i].click()
+        img = browser.links.find_by_text('Sample').first
+        img_url = img['href']
+        title_link = browser.find_by_css('h2.title')
+        title = title_link.text
+        hemispheres = {'img_url': img_url, 'title': title}
+        hemisphere_image_urls.append(hemispheres)
+        browser.back()
+
+    # 4. Return the list that holds the dictionary of each image url and title.
+    return hemisphere_image_urls
+
+   
+
+
 if __name__ == "__main__":
 
     # If running as script, print scraped data
