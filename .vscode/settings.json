@@ -1,3 +1,8 @@
 {
-    "python.autoComplete.extraPaths": ["/Users/Miles/opt/anaconda3/envs/PythonData/bin/python"]
+    "python.autoComplete.extraPaths": [
+        "/Users/Miles/opt/anaconda3/envs/PythonData/bin/python"
+    ],
+    "python.analysis.extraPaths": [
+        "/Users/Miles/opt/anaconda3/envs/PythonData/bin/python"
+    ]
 }
