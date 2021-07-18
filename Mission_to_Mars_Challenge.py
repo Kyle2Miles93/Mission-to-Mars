@@ -12,12 +12,12 @@ browser = Browser('chrome', **executable_path)
 url = 'https://mars.nasa.gov/news/'
 browser.visit(url)
 # Optional delay for loading the page
-browser.is_element_present_by_css("ul.item_list li.slide", wait_time=1)
+browser.is_element_present_by_css("div.list_text", wait_time=1)
 
 
 html = browser.html
 news_soup = soup(html, 'html.parser')
-slide_elem = news_soup.select_one('ul.item_list li.slide')
+slide_elem = news_soup.select_one('div.list_text')
 
 slide_elem.find('div', class_='content_title')
 
@@ -26,7 +26,7 @@ news_title = slide_elem.find('div', class_='content_title').get_text()
 news_title
 
 news_p = slide_elem.find('div', class_='article_teaser_body').get_text()
-news_p
+print(news_p)
 
 
 ### Featured Images
@@ -189,7 +189,7 @@ for i in range(len(images)):
     browser.back()
 
 # 4. Print the list that holds the dictionary of each image url and title.
-hemisphere_image_urls
+print(hemisphere_image_urls)
 
 # 5. Quit the browser
 browser.quit()

@@ -6,11 +6,11 @@ import datetime as dt
 from webdriver_manager.chrome import ChromeDriverManager
 
 
-
+# Scrape Mars News
 def scrape_all():
     # Initiate headless driver for deployment
     executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=True)
+    browser = Browser('chrome', **executable_path, headless=False)
     
 
     news_title, news_paragraph = mars_news(browser)
@@ -31,18 +31,18 @@ def scrape_all():
 
 def mars_news(browser):
 
-    # Scrape Mars News
+
     # Visit the mars nasa news site
-    url = 'https://mars.nasa.gov/news/'
+    url = 'https://redplanetscience.com/'
     browser.visit(url)
     # Optional delay for loading the page
-    browser.is_element_present_by_css("ul.item_list li.slide", wait_time=1)
+    browser.is_element_present_by_css("div.list_text", wait_time=1)
 
     html = browser.html
     news_soup = soup(html, 'html.parser')
 
     try:
-        slide_elem = news_soup.select_one('ul.item_list li.slide')
+        slide_elem = news_soup.select_one('div.list_text')
 
         slide_elem.find('div', class_='content_title')
 
