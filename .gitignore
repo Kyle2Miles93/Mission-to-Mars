@@ -1,0 +1,6 @@
+# Practice files
+
+.DS_Store
+.vscode/settings.json
+__pycache__/Scraping.cpython-37.pyc
+.ipynb_checkpoints-37.pyc

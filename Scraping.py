@@ -6,7 +6,7 @@ import datetime as dt
 from webdriver_manager.chrome import ChromeDriverManager
 
 
-
+# Scrape Mars News
 def scrape_all():
     # Initiate headless driver for deployment
     executable_path = {'executable_path': ChromeDriverManager().install()}
@@ -31,12 +31,12 @@ def scrape_all():
 
 def mars_news(browser):
 
-    # Scrape Mars News
+
     # Visit the mars nasa news site
-    url = 'https://mars.nasa.gov/news/'
+    url = 'https://redplanetscience.com/'
     browser.visit(url)
     # Optional delay for loading the page
-    browser.is_element_present_by_css("ul.item_list li.slide", wait_time=1)
+    browser.is_element_present_by_css("div.list_text", wait_time=1)
 
     html = browser.html
     news_soup = soup(html, 'html.parser')
